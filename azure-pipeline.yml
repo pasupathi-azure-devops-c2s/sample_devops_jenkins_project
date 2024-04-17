@@ -60,7 +60,7 @@ jobs:
   - task: CopyFiles@2
     displayName: 'Copy files to local system'
     inputs:
-      SourceFolder: '$(Build.ArtifactStagingDirectory)'
+      SourceFolder: '$(Build.DefaultWorkingDirectory)'
       Contents: '**'
       TargetFolder: 'C:\Users\PasupathiKumarS\Desktop\project'
 
