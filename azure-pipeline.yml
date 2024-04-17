@@ -25,12 +25,15 @@ jobs:
       source env/bin/activate
       pip install flask
       pip install pymongo
+      pip install pytest
     displayName: 'Install dependencies'
 
 - job: Test
   displayName: 'Test stage'
   dependsOn: Build
   steps:
+  - script: |
+      pytest
     displayName: 'Run tests'
 
 - job: Deploy
