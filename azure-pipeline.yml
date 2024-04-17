@@ -32,7 +32,7 @@ jobs:
   dependsOn: Build
   steps:
   - script: |
-      source env/bin/activate
+      source /home/Pasupathikumar/flask_project_1/env/bin/activate
       pytest
     displayName: 'Run tests'
 
