@@ -53,14 +53,3 @@ jobs:
       fi
     displayName: 'Run tests'
 
-- job: DeployToLocal
-  displayName: 'Deploy to Local System'
-  dependsOn: Build
-  steps:
-  - task: CopyFiles@2
-    displayName: 'Copy files to local system'
-    inputs:
-      SourceFolder: '$(Build.DefaultWorkingDirectory)'
-      Contents: '**'
-      TargetFolder: 'C:\Users\PasupathiKumarS\Desktop\project'
-
