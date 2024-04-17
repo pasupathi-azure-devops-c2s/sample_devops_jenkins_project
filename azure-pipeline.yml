@@ -52,11 +52,23 @@ jobs:
         echo "No test items found. Skipping tests."
       fi
     displayName: 'Run tests'
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        ssh-keyscan -H 20.235.130.103 >> ~/.ssh/known_hosts
+    displayName: 'Configure SSH'
+
 - job: Deploy
   displayName: 'Deploy stage'
   dependsOn: Test
   steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
   - script: |
+      python -m venv env
       source env/bin/activate
       scp -r ./* Pasupathikumar@20.235.130.103:/home/Pasupathikumar/flask_project_1
       ssh Pasupathikumar@20.235.130.103 "source /home/Pasupathikumar/flask_project_1/env/bin/activate && nohup python /home/Pasupathikumar/flask_project_1/app.py &"
