@@ -1,19 +1,44 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+- job: InstallPython
+  displayName: 'Install Python'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- job: Build
+  displayName: 'Build stage'
+  dependsOn: InstallPython
+  steps:
+  - checkout: self
+  - script: |
+      sudo apt-get update
+      sudo apt-get install python3-venv 
+      python -m venv env
+      source env/bin/activate
+      pip install flask
+      pip install pymongo
+    displayName: 'Install dependencies'
+
+- job: Test
+  displayName: 'Test stage'
+  dependsOn: Build
+  steps:
+    displayName: 'Run tests'
+
+- job: Deploy
+  displayName: 'Deploy stage'
+  dependsOn: Test
+  steps:
+  - script: |
+      source env/bin/activate
+      scp -r ./* Pasupathikumar@20.235.130.103:/home/Pasupathikumar/flask_project_1
+      ssh Pasupathikumar@20.235.130.103 "source /home/Pasupathikumar/flask_project_1/env/bin/activate && nohup python /home/Pasupathikumar/flask_project_1/app.py &"
+    displayName: 'Deploy to server'
