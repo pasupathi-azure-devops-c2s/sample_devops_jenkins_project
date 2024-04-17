@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('statics', filename='main.css') }}">
+    <title>Contact Form</title>
+</head>
+
+<body>
+    <h1>Provide your valid contact details.</h1>
+
+    <form method="POST" action="/">
+        <h3>First Name:</h3>
+        <input type="text" name="first_name" required><br>
+        <h3>Last Name:</h3>
+        <input type="text" name="last_name" required><br>
+        <h3>Contact no:</h3>
+        <input type="tel" name="contact_no" required><br> <!-- Changed type to "tel" for better phone number input -->
+        <h3>Email-ID:</h3>
+        <input type="email" name="email" required><br>
+        <h3>User Name:</h3>
+        <input type="text" name="username" required><br>
+        <h3>Password:</h3>
+        <input type="password" name="password" required><br>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+
+</html>
