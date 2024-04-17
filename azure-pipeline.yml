@@ -53,17 +53,13 @@ jobs:
       fi
     displayName: 'Run tests'
 
-- job: Deploy
-  displayName: 'Deploy stage'
-  dependsOn: Test
+- job: DeployToLocal
+  displayName: 'Deploy to Local System'
+  dependsOn: Build
   steps:
-  - task: UsePythonVersion@0
+  - task: CopyFiles@2
+    displayName: 'Copy files to local system'
     inputs:
-      versionSpec: '3.x'
-      addToPath: true
-  - script: |
-      python -m venv env
-      source env/bin/activate
-      scp -r ./* Pasupathikumar@20.235.130.103:/home/Pasupathikumar/flask_project_1
-      ssh Pasupathikumar@20.235.130.103 "source /home/Pasupathikumar/flask_project_1/env/bin/activate && nohup python /home/Pasupathikumar/flask_project_1/app.py &"
-    displayName: 'Deploy to server'
+      SourceFolder: '$(Build.SourcesDirectory)'
+      Contents: '**'
+      TargetFolder: 'C:\Users\PasupathiKumarS\Desktop\project'
