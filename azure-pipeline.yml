@@ -52,12 +52,6 @@ jobs:
         echo "No test items found. Skipping tests."
       fi
     displayName: 'Run tests'
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        ssh-keyscan -H 20.235.130.103 >> ~/.ssh/known_hosts
-    displayName: 'Configure SSH'
 
 - job: Deploy
   displayName: 'Deploy stage'
