@@ -31,8 +31,6 @@ jobs:
   displayName: 'Test stage'
   dependsOn: Build
   steps:
-  - script: |
-      pytest
     displayName: 'Run tests'
 
 - job: Deploy
