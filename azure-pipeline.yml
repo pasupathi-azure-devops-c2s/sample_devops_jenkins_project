@@ -4,51 +4,41 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-stages:
-- stage: Build
+jobs:
+- job: InstallPython
+  displayName: 'Install Python'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+
+- job: Build
   displayName: 'Build stage'
-  jobs:
-  - job: Build
-    displayName: 'Build job'
-    steps:
-    - checkout: self
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-    - script: |
-        python -m venv env
-        source env/bin/activate
-        pip install -r requirements.txt
-      displayName: 'Install dependencies'
+  dependsOn: InstallPython
+  steps:
+  - checkout: self
+  - script: |
+      python -m venv env
+      source env/bin/activate
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
 
-- stage: Test
+- job: Test
   displayName: 'Test stage'
-  jobs:
-  - job: Test
-    displayName: 'Test job'
-    steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-    - script: |
-        source env/bin/activate
-        pytest
-      displayName: 'Run tests'
+  dependsOn: Build
+  steps:
+  - script: |
+      source env/bin/activate
+      pytest
+    displayName: 'Run tests'
 
-- stage: Deploy
+- job: Deploy
   displayName: 'Deploy stage'
-  jobs:
-  - job: Deploy
-    displayName: 'Deploy job'
-    steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.x'
-        addToPath: true
-    - script: |
-        source env/bin/activate
-        scp -r ./* Pasupathikumar@20.235.130.103:/home/Pasupathikumar/flask_project_1
-        ssh Pasupathikumar@20.235.130.103 "source /home/Pasupathikumar/flask_project_1/env/bin/activate && nohup python /home/Pasupathikumar/flask_project_1/app.py &"
-      displayName: 'Deploy to server'
+  dependsOn: Test
+  steps:
+  - script: |
+      source env/bin/activate
+      scp -r ./* Pasupathikumar@20.235.130.103:/home/Pasupathikumar/flask_project_1
+      ssh Pasupathikumar@20.235.130.103 "source /home/Pasupathikumar/flask_project_1/env/bin/activate && nohup python /home/Pasupathikumar/flask_project_1/app.py &"
+    displayName: 'Deploy to server'
